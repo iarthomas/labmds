@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  backend:
+    build: ./backend
+    container_name: sodai-backend
+    environment:
+      BASE_DIR: /models
+      MODEL_FILENAME: rf_pipeline_optuna.joblib
+      THRESHOLD: "0.5"
+    volumes:
+      - ./models:/models:ro   # app/models/<YYYY-MM-DD>/models/*.joblib (cuando lo tengas)
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./frontend
+    container_name: sodai-frontend
+    environment:
+      BACKEND_URL: http://backend:8000
+    ports:
+      - "7860:7860"
+    depends_on:
+      - backend
